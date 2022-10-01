@@ -32,7 +32,7 @@ jobs:
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        // 
+        # https://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
         FOLDER: public
