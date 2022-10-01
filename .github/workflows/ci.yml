@@ -1,0 +1,38 @@
+name: GitHub Actions Build and Deploy XshStudio's WebSite
+on: # push到main分支上触发工作流程，并将打包产物部署到gh-pages分支
+  push: 
+    branches: main 
+    #详细语法见：https://docs.github.com/cn/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest #github actions运行的虚拟机环境（也可以使用自己的环境）
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v3
+
+    - name: Install Pandoc
+      run: |
+        cd /tmp
+        wget -c https://github.com/jgm/pandoc/releases/download/2.14.0.3/pandoc-2.14.0.3-1-amd64.deb
+        sudo dpkg -i pandoc-2.14.0.3-1-amd64.deb
+
+    - name: Install dependency 
+      # install dependencies of hexo
+      run: |
+        pandoc --version
+        npm install
+      # with:
+        # node-version: "16"
+
+    - name: Build
+      run: |
+        npx hexo clean
+        npx hexo generate
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        // 
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: public
